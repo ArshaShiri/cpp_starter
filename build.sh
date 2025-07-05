@@ -18,8 +18,8 @@ EOF
 BUILD_TYPES=("Debug" "Release")
 
 declare -A COMPILER_FLAGS
-COMPILER_FLAGS["Debug"]="-g -O0 -Wall"
-COMPILER_FLAGS["Release"]="-O3 -Wall"
+COMPILER_FLAGS["Debug"]="-g -O0 -Wall -Werror"
+COMPILER_FLAGS["Release"]="-O3 -Wall -Werror"
 
 declare -A LINKER_FLAGS
 LINKER_FLAGS["Debug"]=""
@@ -79,11 +79,7 @@ if [ $reconfigure = true ] || [ $clean_build = true ]; then
     echo "Clean build"
     cmake -S . -DCMAKE_BUILD_TYPE=${build_type} \
         -DCMAKE_CXX_FLAGS="${COMPILER_FLAGS[$build_type]}" \
-        -B $build_path
-
-    # -DCMAKE_EXE_LINKER_FLAGS="${LINKER_FLAGS[$build_type]}"
-
-    # cmake -S . -DCMAKE_TOOLCHAIN_FILE=$build_path/conan_toolchain.cmake -B $build_path -DCMAKE_BUILD_TYPE=$build_type
+        -B $build_path -DCMAKE_TOOLCHAIN_FILE="${build_path}/generators/conan_toolchain.cmake" # --trace-expand > trace.txt 2>&1
 fi
 
 cmake --build $build_path --parallel $(($(nproc) - 1))

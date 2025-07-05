@@ -5,7 +5,7 @@ class Starter(ConanFile):
     name = "Starter"
     version = "0.1"
     settings = "os", "compiler", "build_type", "arch"
-    generators = "CMakeDeps"
+    generators = "CMakeDeps" "CMakeToolchain"
 
     def layout(self):
         cmake_layout(self)
